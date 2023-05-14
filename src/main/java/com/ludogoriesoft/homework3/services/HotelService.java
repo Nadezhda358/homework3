@@ -35,6 +35,22 @@ public class HotelService {
         Optional<Hotel> hotel = hotelRepository.findById(id);
         return hotelToHotelDTO(hotel.get());
     }
+    public HotelDTO updateHotel(int id, Hotel hotel) {
+        Optional<Hotel> foundHotel = hotelRepository.findById(id);
+
+        if (foundHotel.isPresent()) {
+            foundHotel.get().setName(hotel.getName());
+            foundHotel.get().setLocation(hotel.getLocation());
+            foundHotel.get().setRoomsCount(hotel.getRoomsCount());
+            foundHotel.get().setStarsCount(hotel.getStarsCount());
+            foundHotel.get().setHasSpa(hotel.isHasSpa());
+            foundHotel.get().setHasPool(hotel.isHasPool());
+            hotelRepository.save(foundHotel.get());
+            return hotelToHotelDTO(foundHotel.get());
+        }else{
+            return new HotelDTO();
+        }
+    }
 
     private HotelDTO hotelToHotelDTO(Hotel hotel){
         return modelMapper.map(hotel, HotelDTO.class);
