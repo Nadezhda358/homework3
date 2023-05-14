@@ -23,7 +23,10 @@ public class HotelService {
                 .map(this::hotelToHotelDTO)
                 .collect(Collectors.toList());
     }
-
+    public HotelDTO createHotel(Hotel hotel) {
+        hotelRepository.save(hotel);
+        return hotelToHotelDTO(hotel);
+    }
     private HotelDTO hotelToHotelDTO(Hotel hotel){
         return modelMapper.map(hotel, HotelDTO.class);
     }
