@@ -91,4 +91,41 @@ public class HotelServiceTest {
         verify(hotelRepository, times(1)).findById(id);
         assertEquals(new HotelDTO(), result);
     }
+    @Test
+    public void testUpdateHotelWithValidId() {
+        int id = 1;
+        Hotel originalHotel = new Hotel(1,"test hotel", "test location", 2, 3, true, false);
+        Hotel updatedHotel = new Hotel(1, "updated hotel", "updated location", 3, 4, false, true);
+        HotelDTO hotelDTO = new HotelDTO(1, "updated hotel", "updated location", 3, 4, false, true);
+        Optional<Hotel> foundHotel = Optional.of(originalHotel);
+        when(hotelRepository.findById(id)).thenReturn(foundHotel);
+        when(hotelRepository.save(originalHotel)).thenReturn(originalHotel);
+        when(modelMapper.map(updatedHotel, HotelDTO.class)).thenReturn(hotelDTO);
+
+        HotelDTO result = hotelService.updateHotel(id, updatedHotel);
+
+        verify(hotelRepository, times(1)).findById(id);
+        verify(hotelRepository, times(1)).save(originalHotel);
+        verify(modelMapper, times(1)).map(updatedHotel, HotelDTO.class);
+        assertEquals(hotelDTO, result);
+        assertEquals(updatedHotel.getName(), originalHotel.getName());
+        assertEquals(updatedHotel.getLocation(), originalHotel.getLocation());
+        assertEquals(updatedHotel.getRoomsCount(), originalHotel.getRoomsCount());
+        assertEquals(updatedHotel.getStarsCount(), originalHotel.getStarsCount());
+        assertEquals(updatedHotel.isHasSpa(), originalHotel.isHasSpa());
+        assertEquals(updatedHotel.isHasPool(), originalHotel.isHasPool());
+    }
+    @Test
+    public void testUpdateHotelWithInvalidId() {
+        int id = 2;
+        Hotel updatedHotel = new Hotel(1, "updated hotel", "updated location", 3, 4, false, true);
+        when(hotelRepository.findById(id)).thenReturn(Optional.empty());
+
+        HotelDTO result = hotelService.updateHotel(id, updatedHotel);
+
+        verify(hotelRepository, times(1)).findById(id);
+        verify(hotelRepository, never()).save(any());
+        verify(modelMapper, never()).map(any(), any());
+        assertEquals(new HotelDTO(), result);
+    }
 }
