@@ -1,15 +1,16 @@
 package com.ludogoriesoft.homework3.controllers;
 
 import com.ludogoriesoft.homework3.DTO.HotelDTO;
+import com.ludogoriesoft.homework3.entities.Hotel;
 import com.ludogoriesoft.homework3.services.HotelService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/hotels")
@@ -32,5 +33,21 @@ public class HotelController {
         }
     }
 
+    @PostMapping
+    public ResponseEntity<HotelDTO> createHotel(@RequestBody Hotel hotel,UriComponentsBuilder uriComponentsBuilder) {
+        URI location = uriComponentsBuilder.path("/api/v1/hotels/{id}").buildAndExpand(hotelService.createHotel(hotel).getId()).toUri();
+        return ResponseEntity.
+                created(location).
+                build();
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<HotelDTO> updateHotel(@PathVariable int id, @RequestBody Hotel hotel) {
+        HotelDTO hotelDTO = hotelService.updateHotel(id, hotel);
+        if (hotelDTO.getId() != 0) {
+            return ResponseEntity.ok(hotelDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
