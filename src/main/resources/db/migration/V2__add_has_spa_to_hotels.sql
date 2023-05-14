@@ -1,0 +1,1 @@
+alter table hotels add has_spa boolean;

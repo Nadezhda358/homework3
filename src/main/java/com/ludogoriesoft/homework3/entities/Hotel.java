@@ -15,4 +15,5 @@ public class Hotel {
     private String location;
     private int roomsCount;
     private int starsCount;
+    private boolean hasSpa;
 }
