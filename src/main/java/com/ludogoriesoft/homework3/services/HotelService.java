@@ -56,7 +56,7 @@ public class HotelService {
         }
     }
 
-    private HotelDTO hotelToHotelDTO(Hotel hotel){
+    public HotelDTO hotelToHotelDTO(Hotel hotel){
         return modelMapper.map(hotel, HotelDTO.class);
     }
 
