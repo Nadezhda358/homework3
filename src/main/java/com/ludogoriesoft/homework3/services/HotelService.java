@@ -33,7 +33,11 @@ public class HotelService {
     }
     public HotelDTO getHotelById(int id) {
         Optional<Hotel> hotel = hotelRepository.findById(id);
-        return hotelToHotelDTO(hotel.get());
+        if (hotel.isPresent()){
+            return hotelToHotelDTO(hotel.get());
+        }else{
+            return new HotelDTO();
+        }
     }
     public HotelDTO updateHotel(int id, Hotel hotel) {
         Optional<Hotel> foundHotel = hotelRepository.findById(id);
