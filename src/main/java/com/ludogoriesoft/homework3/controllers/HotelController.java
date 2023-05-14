@@ -50,4 +50,10 @@ public class HotelController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HotelDTO> deleteHotelById(@PathVariable("id") int id) {
+        hotelService.deleteHotelById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
