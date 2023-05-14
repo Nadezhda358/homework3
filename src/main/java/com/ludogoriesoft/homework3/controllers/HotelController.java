@@ -53,7 +53,11 @@ public class HotelController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HotelDTO> deleteHotelById(@PathVariable("id") int id) {
-        hotelService.deleteHotelById(id);
-        return ResponseEntity.noContent().build();
+        int rowsAffected = hotelService.deleteHotelById(id);
+        if (rowsAffected > 0) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

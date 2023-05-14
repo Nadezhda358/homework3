@@ -5,6 +5,7 @@ import com.ludogoriesoft.homework3.entities.Hotel;
 import com.ludogoriesoft.homework3.repositories.HotelRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +29,13 @@ public class HotelService {
         hotelRepository.save(hotel);
         return hotelToHotelDTO(hotel);
     }
-    public void deleteHotelById(int id) {
-        hotelRepository.deleteById(id);
+    public int deleteHotelById(int id) {
+        try {
+            hotelRepository.deleteById(id);
+            return 1;
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
     }
     public HotelDTO getHotelById(int id) {
         Optional<Hotel> hotel = hotelRepository.findById(id);

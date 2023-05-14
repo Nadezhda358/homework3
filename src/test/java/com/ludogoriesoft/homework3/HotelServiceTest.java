@@ -8,8 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,28 @@ public class HotelServiceTest {
         hotelService.deleteHotelById(hotel.getId());
         assertFalse(hotelRepository.findById(hotel.getId()).isPresent());
     }
+    @Test
+    public void deleteHotelById_shouldReturnOne_whenHotelIsDeletedSuccessfully() {
+        int id = 1;
+        Mockito.doNothing().when(hotelRepository).deleteById(id);
+
+        int result = hotelService.deleteHotelById(id);
+
+        assertEquals(1, result);
+        Mockito.verify(hotelRepository, Mockito.times(1)).deleteById(id);
+    }
+
+    @Test
+    public void deleteHotelById_shouldReturnZero_whenHotelDoesNotExist() {
+        int id = 1;
+        doThrow(EmptyResultDataAccessException.class).when(hotelRepository).deleteById(id);
+
+        int result = hotelService.deleteHotelById(id);
+
+        assertEquals(0, result);
+        verify(hotelRepository, times(1)).deleteById(id);
+    }
+
     @Test
     public void testCreateHotelWithNull() {
         Hotel hotel = null;
