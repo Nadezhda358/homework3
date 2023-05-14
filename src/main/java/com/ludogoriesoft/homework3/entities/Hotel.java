@@ -16,4 +16,5 @@ public class Hotel {
     private int roomsCount;
     private int starsCount;
     private boolean hasSpa;
+    private boolean hasPool;
 }
