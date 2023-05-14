@@ -27,6 +27,10 @@ public class HotelService {
         hotelRepository.save(hotel);
         return hotelToHotelDTO(hotel);
     }
+    public void deleteHotelById(int id) {
+        hotelRepository.deleteById(id);
+    }
+
     private HotelDTO hotelToHotelDTO(Hotel hotel){
         return modelMapper.map(hotel, HotelDTO.class);
     }
