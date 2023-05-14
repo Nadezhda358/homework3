@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -127,5 +129,35 @@ public class HotelServiceTest {
         verify(hotelRepository, never()).save(any());
         verify(modelMapper, never()).map(any(), any());
         assertEquals(new HotelDTO(), result);
+    }
+    @Test
+    public void testGetAllHotels() {
+        List<Hotel> hotels = new ArrayList<>();
+        hotels.add(new Hotel(1, "test hotel 1", "test location 1", 2, 3, true, false));
+        hotels.add(new Hotel(2, "test hotel 2", "test location 2", 3, 4, false, true));
+        List<HotelDTO> hotelDTOs = new ArrayList<>();
+        hotelDTOs.add(new HotelDTO(1, "test hotel 1", "test location 1", 2, 3, true, false));
+        hotelDTOs.add(new HotelDTO(2, "test hotel 2", "test location 2", 3, 4, false, true));
+        when(hotelRepository.findAll()).thenReturn(hotels);
+        when(modelMapper.map(hotels.get(0), HotelDTO.class)).thenReturn(hotelDTOs.get(0));
+        when(modelMapper.map(hotels.get(1), HotelDTO.class)).thenReturn(hotelDTOs.get(1));
+
+        List<HotelDTO> result = hotelService.getAllHotels();
+
+        verify(hotelRepository, times(1)).findAll();
+        verify(modelMapper, times(1)).map(hotels.get(0), HotelDTO.class);
+        verify(modelMapper, times(1)).map(hotels.get(1), HotelDTO.class);
+        assertEquals(hotelDTOs, result);
+    }
+    @Test
+    public void testGetAllHotelsWithNoHotels() {
+        List<Hotel> hotels = new ArrayList<>();
+        List<HotelDTO> hotelDTOs = new ArrayList<>();
+        when(hotelRepository.findAll()).thenReturn(hotels);
+
+        List<HotelDTO> result = hotelService.getAllHotels();
+
+        verify(hotelRepository, times(1)).findAll();
+        assertEquals(hotelDTOs, result);
     }
 }
